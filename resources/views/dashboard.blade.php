@@ -1,72 +1,59 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Panel de Control') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Tarjetas de Métricas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-sm font-medium text-gray-500">Elementos Únicos</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $totalItems }}</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-sm font-medium text-gray-500">Items Sin Stock</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $itemsOutOfStock }}</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-sm font-medium text-gray-500">Items con Stock Bajo</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $itemsWithLowStock }}</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-sm font-medium text-gray-500">Próximos a Vencer</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $itemsNearExpiration->count() }}</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-sm font-medium text-gray-500">Valor del Inventario</h3>
-                    <p class="text-3xl font-bold mt-2">${{ number_format($inventoryValue, 0, ',', '.') }}</p>
-                </div>
-            </div>
+            
+            {{-- INICIO: CONTENEDOR DE LAS TARJETAS DE ESTADÍSTICAS --}}
+            {{-- Usamos un grid para crear 5 columnas en escritorio y menos en móvil --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
 
-            <!-- Alertas Activas -->
-            <div class="mt-8">
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">Alertas Activas</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="font-semibold text-yellow-600 mb-3">Productos con Stock Bajo</h3>
-                        @if($lowStockProducts->isEmpty())
-                            <p class="text-sm text-gray-500">No hay productos con stock bajo.</p>
-                        @else
-                            <ul class="divide-y divide-gray-200">
-                                @foreach ($lowStockProducts as $product)
-                                    <li class="py-2 flex justify-between">
-                                        <span>{{ $product->nombre_del_producto }}</span>
-                                        <span class="font-semibold">{{ $product->cantidad_actual }} uds.</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="font-semibold text-red-600 mb-3">Productos Próximos a Vencer (30 días)</h3>
-                         @if($itemsNearExpiration->isEmpty())
-                            <p class="text-sm text-gray-500">No hay productos próximos a vencer.</p>
-                        @else
-                            <ul class="divide-y divide-gray-200">
-                                 @foreach ($itemsNearExpiration as $product)
-                                    <li class="py-2 flex justify-between">
-                                        <span>{{ $product->nombre_del_producto }} (Lote: {{ $product->numero_de_lote }})</span>
-                                        <span class="font-semibold">Vence: {{ \Carbon\Carbon::parse($product->fecha_de_vencimiento)->format('d/m/Y') }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
+                {{-- Tarjeta 1: Elementos Únicos --}}
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Elementos Únicos</h3>
+                    <p class="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">{{ $totalItems }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Tipos de productos</p>
                 </div>
+
+                {{-- Tarjeta 2: Sin Stock --}}
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Sin Stock</h3>
+                    <p class="mt-1 text-3xl font-semibold text-red-500">{{ $itemsOutOfStock }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Ítems agotados</p>
+                </div>
+
+                {{-- Tarjeta 3: Stock Bajo --}}
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Stock Bajo</h3>
+                    <p class="mt-1 text-3xl font-semibold text-orange-500">{{ $itemsWithLowStock }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Debajo del umbral</p>
+                </div>
+
+                {{-- Tarjeta 4: Próximos a Vencer --}}
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Próximos a Vencer</h3>
+                    {{-- La variable es una colección, así que usamos count() para obtener el número --}}
+                    <p class="mt-1 text-3xl font-semibold text-blue-500">{{ $itemsNearExpiration->count() }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Vencen en menos de 30 días</p>
+                </div>
+
+                {{-- Tarjeta 5: Valor del Inventario --}}
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Valor del Inventario</h3>
+                    {{-- Formateamos el número como moneda --}}
+                    <p class="mt-1 text-3xl font-semibold text-green-500">${{ number_format($inventoryValue, 2, ',', '.') }}</p>
+                     <p class="text-xs text-gray-500 dark:text-gray-400">Costo total de ítems</p>
+                </div>
+
             </div>
+            {{-- FIN: CONTENEDOR DE LAS TARJETAS DE ESTADÍSTICAS --}}
+
+            {{-- Aquí añadiremos las tablas de alertas en el siguiente paso --}}
+
         </div>
     </div>
 </x-app-layout>

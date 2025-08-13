@@ -12,8 +12,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 // --- RUTA DE BIENVENIDA PÚBLICA ---
-// Ahora la ruta principal apunta al formulario de login.
-Route::get('/', [AuthenticatedSessionController::class, 'create'])->middleware('guest')->name('welcome');
+// ANTES: Apuntaba al controlador de login.
+// AHORA: Apuntará a la vista 'welcome.blade.php'. Esta será nuestra nueva página de inicio.
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('guest')->name('welcome');
 
 
 // --- RUTAS PROTEGIDAS (SOLO PARA USUARIOS AUTENTICADOS) ---
@@ -32,4 +35,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
+// Este archivo ya contiene las rutas para /login, /register, etc.
 require __DIR__.'/auth.php';
