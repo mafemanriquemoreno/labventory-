@@ -4,16 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\MarcaController; // <-- 1. IMPORTAMOS EL NUEVO CONTROLADOR
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// --- RUTA DE BIENVENIDA PÚBLICA ---
-// ANTES: Apuntaba al controlador de login.
-// AHORA: Apuntará a la vista 'welcome.blade.php'. Esta será nuestra nueva página de inicio.
 Route::get('/', function () {
     return view('welcome');
 })->middleware('guest')->name('welcome');
@@ -33,7 +26,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/productos/{id}/descargar', [ProductController::class, 'dischargeStock'])->name('productos.dischargeStock');
     Route::get('/trazabilidad', [ProductController::class, 'showTraceability'])->name('trazabilidad.index');
 
+    // Rutas para la creación dinámica desde modales
+    Route::post('/proveedores', [ProveedorController::class, 'store'])->name('proveedores.store');
+    
+    // --- INICIO DE LA MODIFICACIÓN ---
+    // 2. AÑADIMOS LA RUTA PARA GUARDAR MARCAS
+    Route::post('/marcas', [MarcaController::class, 'store'])->name('marcas.store');
+    // --- FIN DE LA MODIFICACIÓN ---
+
 });
 
-// Este archivo ya contiene las rutas para /login, /register, etc.
 require __DIR__.'/auth.php';

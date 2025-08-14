@@ -8,20 +8,24 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display.swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display.swap" rel="stylesheet">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
-        {{--
-            INICIO DE LA MODIFICACIÓN
-            Hemos eliminado los estilos de imagen de fondo de este div.
-            Ahora solo usa las clases de Tailwind para un fondo gris oscuro,
-            que es el estándar de Breeze para el modo oscuro.
-        --}}
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-            {{-- Incluye el menú de navegación --}}
             @include('layouts.navigation')
 
             @if (isset($header))
@@ -37,6 +41,10 @@
             </main>
 
         </div>
+
+        {{-- INICIO DE LA MODIFICACIÓN: Añadimos el script de SweetAlert2 --}}
+        {{-- Lo colocamos al final del body para una carga más eficiente de la página --}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         {{-- FIN DE LA MODIFICACIÓN --}}
     </body>
 </html>

@@ -2,9 +2,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
+                
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <a href="{{ route('dashboard') }}" class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        LabVentory
                     </a>
                 </div>
 
@@ -12,20 +13,20 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
                     <x-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                         {{ __('Inventario') }}
                     </x-nav-link>
-
-                    {{--
-                        INICIO DE LA MODIFICACIÓN
-                        Aquí añadimos el enlace de Trazabilidad que faltaba.
-                    --}}
                     <x-nav-link :href="route('trazabilidad.index')" :active="request()->routeIs('trazabilidad.index')">
                         {{ __('Trazabilidad') }}
                     </x-nav-link>
-                    {{-- FIN DE LA MODIFICACIÓN --}}
-
+                    <x-nav-link href="#" :active="request()->routeIs('orders.*')">
+                        {{ __('Órdenes de Compra') }}
+                    </x-nav-link>
+                    @can('esAdmin')
+                        <x-nav-link href="#" :active="request()->routeIs('users.*')">
+                            {{ __('Usuarios') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -36,9 +37,11 @@
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
+                                {{-- INICIO DE LA CORRECCIÓN: SVG con el 'path' correcto --}}
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
+                                {{-- FIN DE LA CORRECCIÓN --}}
                             </div>
                         </button>
                     </x-slot>
@@ -47,10 +50,8 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -77,19 +78,20 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-
             <x-responsive-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                 {{ __('Inventario') }}
             </x-responsive-nav-link>
-            
-            {{--
-                INICIO DE LA MODIFICACIÓN (VERSIÓN MÓVIL)
-                También añadimos el enlace aquí para que se vea en el menú de hamburguesa.
-            --}}
             <x-responsive-nav-link :href="route('trazabilidad.index')" :active="request()->routeIs('trazabilidad.index')">
                 {{ __('Trazabilidad') }}
             </x-responsive-nav-link>
-            {{-- FIN DE LA MODIFICACIÓN (VERSIÓN MÓVIL) --}}
+            <x-responsive-nav-link href="#" :active="request()->routeIs('orders.*')">
+                {{ __('Órdenes de Compra') }}
+            </x-responsive-nav-link>
+            @can('esAdmin')
+                <x-responsive-nav-link href="#" :active="request()->routeIs('users.*')">
+                    {{ __('Usuarios') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
@@ -97,15 +99,12 @@
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
-
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
-
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
